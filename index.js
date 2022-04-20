@@ -5,11 +5,11 @@ import './style.css';
 import { initializeApp } from 'firebase/app';
 
 // Add the Firebase products and methods that you want to use
-import { 
-  getAuth, 
+import {
+  getAuth,
   EmailAuthProvider,
   signOut,
-  onAuthStateChanged 
+  onAuthStateChanged
 } from 'firebase/auth';
 
 import {} from 'firebase/firestore';
@@ -58,44 +58,43 @@ async function main() {
     );
   }
 
-// FirebaseUI config
-const uiConfig = {
-  credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-  signInOptions: [
-    // Email / Password Provider.
-    EmailAuthProvider.PROVIDER_ID
-  ],
-  callbacks: {
-    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-      // Handle sign-in.
-      // Return false to avoid redirect.
-      return false;
+  // FirebaseUI config
+  const uiConfig = {
+    credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+    signInOptions: [
+      // Email / Password Provider.
+      EmailAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+      signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+        // Handle sign-in.
+        // Return false to avoid redirect.
+        return false;
+      }
     }
-  }
-};
+  };
 
-// Initialize the FirebaseUI widget using Firebase
-const ui = new firebaseui.auth.AuthUI(getAuth());
+  // Initialize the FirebaseUI widget using Firebase
+  const ui = new firebaseui.auth.AuthUI(getAuth());
 
-// Listen to RSVP button clicks
-startRsvpButton.addEventListener('click', () => {
-  if (auth.currentUser) {
-    // User is signed in; allows user to sign out
-    signOut(auth);
-  } else {
-    // No user is signed in; allows user to sign in
-    ui.start('#firebaseui-auth-container', uiConfig);
-    
-  }
-});
+  // Listen to RSVP button clicks
+  startRsvpButton.addEventListener('click', () => {
+    if (auth.currentUser) {
+      // User is signed in; allows user to sign out
+      signOut(auth);
+    } else {
+      // No user is signed in; allows user to sign in
+      ui.start('#firebaseui-auth-container', uiConfig);
+    }
+  });
 
-// Listen to the current Auth state
-onAuthStateChanged(auth, user => {
-  if (user) {
-    startRsvpButton.textContent = 'LOGOUT';
-  } else {
-    startRsvpButton.textContent = 'RSVP';
-  }
-});
+  // Listen to the current Auth state
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      startRsvpButton.textContent = 'LOGOUT';
+    } else {
+      startRsvpButton.textContent = 'RSVP';
+    }
+  });
 }
 main();
