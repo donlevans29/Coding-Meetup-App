@@ -1,23 +1,17 @@
 // Import stylesheets
 import './style.css';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: 'AIzaSyC_3wMwdzCMQxYhqk3FGYe3tPDCgdVJPIg',
-  authDomain: 'coding-meetup.firebaseapp.com',
-  projectId: 'coding-meetup',
-  storageBucket: 'coding-meetup.appspot.com',
-  messagingSenderId: '489655894519',
-  appId: '1:489655894519:web:718c92cfe19874c7dbaef2',
-  measurementId: 'G-LNR48ZEHJJ',
-};
-
 // Firebase App (the core Firebase SDK) is always required
 import { initializeApp } from 'firebase/app';
 
 // Add the Firebase products and methods that you want to use
-import { getAuth, EmailAuthProvider } from 'firebase/auth';
+import { 
+  getAuth, 
+  EmailAuthProvider,
+  signOut,
+  onAuthStateChanged 
+} from 'firebase/auth';
+
 import {} from 'firebase/firestore';
 
 import * as firebaseui from 'firebaseui';
@@ -37,14 +31,32 @@ let rsvpListener = null;
 let guestbookListener = null;
 
 let db, auth;
-
 async function main() {
   // Add Firebase project configuration object here
-  const firebaseConfig = {};
+  const firebaseConfig = {
+    apiKey: 'AIzaSyC_3wMwdzCMQxYhqk3FGYe3tPDCgdVJPIg',
+    authDomain: 'coding-meetup.firebaseapp.com',
+    projectId: 'coding-meetup',
+    storageBucket: 'coding-meetup.appspot.com',
+    messagingSenderId: '489655894519',
+    appId: '1:489655894519:web:718c92cfe19874c7dbaef2',
+    measurementId: 'G-LNR48ZEHJJ',
+  };
 
-  // initializeApp(firebaseConfig);
-  initializeApp(firebaseConfig);
-  auth = getAuth();
+  // Make sure Firebase is initilized
+  try {
+    if (firebaseConfig && firebaseConfig.apiKey) {
+      initializeApp(firebaseConfig);
+    }
+    auth = getAuth();
+  } catch (e) {
+    console.log('error:', e);
+    document.getElementById('app').innerHTML =
+      '<h1>Welcome to the Codelab! Add your Firebase config object to <pre>/index.js</pre> and refresh to get started</h1>';
+    throw new Error(
+      'Welcome to the Codelab! Add your Firebase config object from the Firebase Console to `/index.js` and refresh to get started'
+    );
+  }
 
 // FirebaseUI config
 const uiConfig = {
@@ -66,8 +78,7 @@ const uiConfig = {
 const ui = new firebaseui.auth.AuthUI(getAuth());
 
 // Listen to RSVP button clicks
-startRsvpButton.addEventListener('click',
- () => {
+startRsvpButton.addEventListener('click', () => {
   if (auth.currentUser) {
     // User is signed in; allows user to sign out
     signOut(auth);
