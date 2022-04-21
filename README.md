@@ -1,3 +1,10 @@
+# Live Demo
+https://coding-meetup.firebaseapp.com/?73779
+
+# Production Link
+https://firebase-gtk-web-checkpoint1-4bgrto.stackblitz.io
+
+
 # WTM Summit 2019 Firebase Workshop
 
 Check out each step:
